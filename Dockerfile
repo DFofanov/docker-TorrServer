@@ -8,26 +8,23 @@ MAINTAINER DFofanov <dfofanov@gmail.com>
 ENV GODEBUG="madvdontneed=1"
 
 ENV TorrSrv_RELEASE="1.1.77"
-ENV TorrSrv_URL=https://github.com/YouROK/TorrServer/releases/download/$TorrSrv_RELEASE/TorrServer-linux-amd64
+ENV TorrSrv_URL=https://github.com/YouROK/TorrServer/releases/download/${TorrSrv_RELEASE}/TorrServer-linux-amd64
 ENV TorrSrv_PORT="8090"
-
-#RUN echo 'Hi, I am in your container' $TorrSrv_RELEASE > result.txt
-#RUN cat result.txt
 
 RUN export DEBIAN_FRONTEND=noninteractive \
 && apt-get update && apt-get upgrade -y \
 && apt-get install --no-install-recommends -y ca-certificates tzdata wget curl procps cron \
 && apt-get clean \
 && mkdir -p /torrserver/config && chmod -R 666 /torrserver/config \
-&& wget -O /torrserver/TorrServer -P /torrserver/ $TorrSrv_URL \
+&& wget -O /torrserver/TorrServer -P /torrserver/ ${TorrSrv_URL} \
 && chmod a+x /torrserver/TorrServer \
 && touch /var/log/cron.log \
 && ln -sf /proc/1/fd/1 /var/log/cron.log
 
-HEALTHCHECK --interval=5s --timeout=10s --retries=3 CMD curl -sS 127.0.0.1:$TorrSrv_PORT || exit 1
+HEALTHCHECK --interval=5s --timeout=10s --retries=3 CMD curl -sS 127.0.0.1:${TorrSrv_PORT} || exit 1
 
 VOLUME ["/torrserver/config"]
-EXPOSE $TorrSrv_PORT
+EXPOSE "${TorrSrv_PORT}"
 
-#ENTRYPOINT ["/torrserver/TorrServer --path=/torrserver/config/ --port="$TorrSrv_PORT]
+ENTRYPOINT ["/torrserver/TorrServer"]
 CMD ["--path", "/torrserver/config"]
