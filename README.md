@@ -2,14 +2,14 @@
 Unofficial Docker Image for TorrServer
 
 ## Usage
-```
+```sh
 docker run -d \
-	-p 8090:8090 \
-	-v config:/torrserver/config \
+    -p 8090:8090 \
+    -v config:/torrserver/config \
     -e TZ=Europe/Moscow \
-	--restart always \
-	--name torrserver \    
-	19780529/torrserver
+    --restart always \
+    --name torrserver \    
+    19780529/torrserver
 ```
 
 ## Parameters
