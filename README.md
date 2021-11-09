@@ -18,8 +18,8 @@ docker run -d \
 * ```-e TZ=Europe/Moscow``` - Time Zone
 * ```--name torrserver``` - container name
 
-### Info
+## Info
 * To monitor the logs of container in realtime ```docker logs torrserver```
 
-### Versions
+## Versions
 * 09.11.2021: TorrServer ver. 1.1.77
