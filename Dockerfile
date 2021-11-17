@@ -8,12 +8,12 @@ ENV URL=https://github.com/YouROK/TorrServer/releases/download/${RELEASE}/TorrSe
 
 WORKDIR /torrserver
 
-VOLUME /config
+VOLUME [/torrserver/config]
 EXPOSE 8090
 
 RUN export BACKEND=noninteractive \ 
 && apk add --no-cache wget curl \
-&& mkdir -p ./config && chmod -R 666 ./config \
+&& mkdir -p ./config && chmod -R 775 ./config \
 && wget -O ./TorrServer -P ./ ${URL} \
 && chmod a+x TorrServer \
 && touch /var/log/cron.log \
