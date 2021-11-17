@@ -1,30 +1,25 @@
-#
-# This is unofficial dockerized precompiled TorrServer
-#
-FROM ubuntu:latest
-MAINTAINER DFofanov <dfofanov@gmail.com>
+FROM alpine:latest
+LABEL maintainer="dfofanov@gmail.com"
 
-# On linux systems you need to set this environment variable before run:
 ENV GODEBUG="madvdontneed=1"
 
-ENV TorrSrv_RELEASE="1.1.77"
-ENV TorrSrv_URL=https://github.com/YouROK/TorrServer/releases/download/${TorrSrv_RELEASE}/TorrServer-linux-amd64
-ENV TorrSrv_PORT="8090"
+ENV RELEASE="1.1.77"
+ENV URL=https://github.com/YouROK/TorrServer/releases/download/${RELEASE}/TorrServer-linux-amd64
 
-RUN export DEBIAN_FRONTEND=noninteractive \
-&& apt-get update && apt-get upgrade -y \
-&& apt-get install --no-install-recommends -y ca-certificates tzdata wget curl procps cron \
-&& apt-get clean \
-&& mkdir -p /torrserver/config && chmod -R 666 /torrserver/config \
-&& wget -O /torrserver/TorrServer -P /torrserver/ ${TorrSrv_URL} \
-&& chmod a+x /torrserver/TorrServer \
+WORKDIR /torrserver
+
+VOLUME /config
+EXPOSE 8090
+
+RUN export BACKEND=noninteractive \ 
+&& apk add --no-cache wget curl \
+&& mkdir -p ./config && chmod -R 666 ./config \
+&& wget -O ./TorrServer -P ./ ${URL} \
+&& chmod a+x TorrServer \
 && touch /var/log/cron.log \
 && ln -sf /proc/1/fd/1 /var/log/cron.log
 
-HEALTHCHECK --interval=5s --timeout=10s --retries=3 CMD curl -sS 127.0.0.1:${TorrSrv_PORT} || exit 1
+HEALTHCHECK --interval=5s --timeout=10s --retries=3 CMD curl -sS 127.0.0.1:${PORT} || exit 1
 
-VOLUME ["/torrserver/config"]
-EXPOSE "${TorrSrv_PORT}"
-
-ENTRYPOINT ["/torrserver/TorrServer"]
-CMD ["--path", "/torrserver/config"]
+ENTRYPOINT ["./TorrServer"]
+CMD ["--path", "./config"]
