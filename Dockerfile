@@ -8,7 +8,7 @@ ENV URL=https://github.com/YouROK/TorrServer/releases/download/${RELEASE}/TorrSe
 
 WORKDIR /torrserver
 
-VOLUME [/torrserver/config]
+VOLUME [./config]
 EXPOSE 8090
 
 RUN export BACKEND=noninteractive \ 
